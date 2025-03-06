@@ -7,7 +7,7 @@ import tarfile
 import shutil
 import time
 from requests.exceptions import ChunkedEncodingError
-
+import re
 
 with open("blacklist.txt", "r", encoding="utf-8") as f:
     blacklist = [line.strip() for line in f if line.strip()]
@@ -25,7 +25,7 @@ os.makedirs(EXTRACTED_DIR, exist_ok=True)
 
 # Fonction pour télécharger le paquet tarball depuis le registre npm
 def download_package(package_name):
-    print(colored(f"Téléchargement du paquet : {package_name}", "red"))
+    print(colored(f"Téléchargement du paquet : {package_name}", "yellow"))
     try:
         # Construire l'URL du paquet tarball
         package_url = f"https://registry.npmjs.org/{package_name}/latest"
@@ -66,6 +66,19 @@ def download_package(package_name):
             else:
                 print(colored(f"Analyse échouée pour {package_name}", "yellow"))
                 with open(output_file, "a") as f:
+                    if faulty_match := re.search(r">?\s*([\w./-]+):\s*\d+\s*secret detected", result.stdout):
+                        faulty_path = faulty_match.group(1)
+                        faulty_dir = f"faulty/{package_name}"
+
+                        os.makedirs(faulty_dir, exist_ok=True)
+                        
+                        try:
+                            subprocess.run(["mv", faulty_path, faulty_dir])
+                            print(colored(f"Fichier défectueux déplacé vers {faulty_dir}", "blue"))
+                        except Exception as e:
+                            print(colored(f"Erreur lors du déplacement de {faulty_path} : {e}", "red"))
+                    
+
                     f.write(f"Résultats pour {package_name}:\n")
                     f.write(result.stderr)
                     f.write(result.stdout)
@@ -82,7 +95,7 @@ def download_package(package_name):
             print(colored(f"Dossier {extract_path} supprimé.", "green"))
             
         else:
-            print(colored(f"Erreur lors du téléchargement du paquet {package_name}. {response.json()}", "yellow"))
+            print(colored(f"Erreur lors du téléchargement du paquet {package_name}. {response.json()}", "red"))
             if "latest" in response.json():
                 package_url = f"https://registry.npmjs.org/{package_name}"
                 response = requests.get(package_url)
@@ -90,7 +103,7 @@ def download_package(package_name):
                 if response.json().get("versions")!={}:
                     breakpoint()
     except Exception as e:
-        print(colored(f"Erreur dans le processus de téléchargement ou d'extraction pour {package_name}: {e}", "yellow"))
+        print(colored(f"Erreur dans le processus de téléchargement ou d'extraction pour {package_name}: {e}", "red"))
 
 # Fonction pour analyser les lignes de changement
 def analyze_change(change):
@@ -134,7 +147,7 @@ def analyze_change(change):
 def listen_changes():
     while True:
         try:
-            with requests.get(URL, stream=True,timeout=10) as response:
+            with requests.get(URL, stream=True) as response:
                 # Lire les lignes du flux de changements
                 for line in response.iter_lines():
                     if line:

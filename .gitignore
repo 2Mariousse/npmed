@@ -13,5 +13,5 @@ blacklist.txt
 scan_results.txt
 downloads/
 extracted/
-.cache_gghshield
+.cache_ggshield
 .python-version

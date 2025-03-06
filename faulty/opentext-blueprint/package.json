@@ -1,0 +1,63 @@
+{
+    "name": "opentext-blueprint",
+    "version": "2.0.0-beta.9",
+    "description": "OpenText Blueprint",
+    "type": "module",
+    "style": "src/styles/blueprint.css",
+    "main": "src/styles/blueprint.css",
+    "module": "dist//js/blueprint.min.js",
+    "files": [
+        "dist",
+        "src/styles"
+    ],
+    "scripts": {
+        "dev": "vite",
+        "build": "tsc -b && vite build",
+        "build:components": "tsc -b && vite build --mode components",
+        "build:css": "tsc -b && vite build --mode css",
+        "build:js": "tsc -b && vite build --mode js",
+        "lint": "eslint .",
+        "preview": "vite preview",
+        "storybook": "storybook dev -p 6006",
+        "build-storybook": "storybook build",
+        "chromatic": "npx chromatic --project-token=chpt_bfdc34d424a79ef"
+    },
+    "devDependencies": {
+        "@chromatic-com/storybook": "^3.2.5",
+        "@eslint/js": "^9.21.0",
+        "@headlessui/react": "^2.2.0",
+        "@heroicons/react": "^2.2.0",
+        "@storybook/addon-essentials": "^8.6.3",
+        "@storybook/addon-interactions": "^8.6.3",
+        "@storybook/addon-onboarding": "^8.6.3",
+        "@storybook/blocks": "^8.6.3",
+        "@storybook/react": "^8.6.3",
+        "@storybook/react-vite": "^8.6.3",
+        "@storybook/test": "^8.6.3",
+        "@tailwindcss/vite": "^4.0.9",
+        "@types/node": "^22.13.5",
+        "@types/react": "^19.0.10",
+        "@types/react-dom": "^19.0.4",
+        "@vitejs/plugin-react": "^4.3.4",
+        "accordion-js": "^3.4.0",
+        "chromatic": "^11.26.1",
+        "clsx": "^2.1.1",
+        "eslint": "^9.21.0",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "eslint-plugin-react-refresh": "^0.4.19",
+        "eslint-plugin-storybook": "^0.11.4",
+        "globals": "^15.15.0",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "storybook": "^8.6.3",
+        "tailwindcss": "^4.0.9",
+        "typescript": "~5.7.3",
+        "typescript-eslint": "^8.25.0",
+        "vite": "^6.2.0"
+    },
+    "eslintConfig": {
+        "extends": [
+            "plugin:storybook/recommended"
+        ]
+    }
+}
